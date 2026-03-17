@@ -13,12 +13,13 @@ import {
 import { Game, CATEGORIES, Category } from '../types';
 import { motion, AnimatePresence } from 'motion/react';
 import { onSnapshot, query, orderBy } from 'firebase/firestore';
-import { gamesCollection, addGame, deleteGame, handleFirestoreError, OperationType, auth, signInWithGoogle, signOut } from '../firebase';
+import { gamesCollection, addGame, deleteGame, handleFirestoreError, OperationType, auth, signInAnonymously, signOut } from '../firebase';
 import { onAuthStateChanged, User } from 'firebase/auth';
 
 export const Admin: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
+  const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [games, setGames] = useState<Game[]>([]);
   const [isAdding, setIsAdding] = useState(false);
@@ -51,7 +52,11 @@ export const Admin: React.FC = () => {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
-      setIsAuthorized(!!user);
+      // Check if session storage has the auth flag
+      const sessionAuth = sessionStorage.getItem('admin_authorized');
+      if (sessionAuth === 'true' && user) {
+        setIsAuthorized(true);
+      }
       setAuthLoading(false);
     });
     return () => unsubscribe();
@@ -76,18 +81,26 @@ export const Admin: React.FC = () => {
     return () => unsubscribe();
   }, [isAuthorized]);
 
-  const handleLogin = async () => {
-    try {
-      await signInWithGoogle();
-      setError('');
-    } catch (err) {
-      setError('Authentication failed. Please try again.');
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (password === 'HuddyBuddy') {
+      try {
+        await signInAnonymously();
+        setIsAuthorized(true);
+        sessionStorage.setItem('admin_authorized', 'true');
+        setError('');
+      } catch (err) {
+        setError('Authentication failed. Please try again.');
+      }
+    } else {
+      setError('Incorrect password. Please try again.');
     }
   };
 
   const handleLogout = async () => {
     await signOut();
     setIsAuthorized(false);
+    sessionStorage.removeItem('admin_authorized');
   };
 
   const handleAddGame = async (e: React.FormEvent) => {
@@ -131,19 +144,38 @@ export const Admin: React.FC = () => {
               <Shield className="w-8 h-8 text-emerald-500" />
             </div>
             <h1 className="text-2xl font-bold">Admin Portal</h1>
-            <p className="text-zinc-500 text-sm mt-2">Sign in with an authorized account to manage games.</p>
+            <p className="text-zinc-500 text-sm mt-2">Enter the master password to access game management.</p>
           </div>
 
-          <div className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div>
+              <label className="block text-xs font-bold text-zinc-500 uppercase tracking-wider mb-2">Password</label>
+              <input
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="••••••••"
+                className="w-full bg-black border border-zinc-800 rounded-xl px-4 py-3 text-zinc-200 focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                autoFocus
+              />
+            </div>
             <button
-              onClick={handleLogin}
-              className="w-full flex items-center justify-center gap-3 bg-white hover:bg-zinc-200 text-black font-bold py-3 rounded-xl transition-all"
+              type="submit"
+              className="w-full flex items-center justify-center gap-3 bg-emerald-500 hover:bg-emerald-400 text-black font-bold py-3 rounded-xl transition-all shadow-lg shadow-emerald-500/20"
             >
               <LogIn className="w-5 h-5" />
-              Sign in with Google
+              Unlock Portal
             </button>
-            {error && <p className="text-rose-500 text-xs font-medium text-center">{error}</p>}
-          </div>
+            {error && (
+              <motion.p 
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="text-rose-500 text-xs font-medium text-center"
+              >
+                {error}
+              </motion.p>
+            )}
+          </form>
         </div>
       </div>
     );
@@ -157,7 +189,7 @@ export const Admin: React.FC = () => {
             <Gamepad2 className="w-8 h-8 text-emerald-500" />
             Game Management
           </h1>
-          <p className="text-zinc-500 text-sm mt-1">Logged in as {user?.email}</p>
+          <p className="text-zinc-500 text-sm mt-1">Authenticated via Master Password</p>
         </div>
         <div className="flex gap-4">
           <button

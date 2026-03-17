@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, addDoc, getDocs, onSnapshot, query, orderBy, doc, deleteDoc, updateDoc, getDocFromServer } from 'firebase/firestore';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as firebaseSignOut, signInAnonymously as firebaseSignInAnonymously } from 'firebase/auth';
 import firebaseConfig from '../firebase-applet-config.json';
 import { Game } from './types';
 
@@ -25,6 +25,16 @@ testConnection();
 export const signInWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  } catch (error) {
+    console.error('Auth Error: ', error);
+    throw error;
+  }
+};
+
+export const signInAnonymously = async () => {
+  try {
+    const result = await firebaseSignInAnonymously(auth);
     return result.user;
   } catch (error) {
     console.error('Auth Error: ', error);
