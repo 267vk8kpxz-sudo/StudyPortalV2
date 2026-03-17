@@ -1,0 +1,63 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
+}
+
+:root {
+  --primary: #10b981; /* Default emerald */
+  --primary-glow: rgba(16, 185, 129, 0.2);
+}
+
+[data-theme='ruby'] {
+  --primary: #f43f5e;
+  --primary-glow: rgba(244, 63, 94, 0.2);
+}
+
+[data-theme='sapphire'] {
+  --primary: #3b82f6;
+  --primary-glow: rgba(59, 130, 246, 0.2);
+}
+
+[data-theme='amethyst'] {
+  --primary: #a855f7;
+  --primary-glow: rgba(168, 85, 247, 0.2);
+}
+
+[data-theme='gold'] {
+  --primary: #eab308;
+  --primary-glow: rgba(234, 179, 8, 0.2);
+}
+
+/* Dynamic primary overrides */
+.text-emerald-500 { color: var(--primary) !important; }
+.bg-emerald-500 { background-color: var(--primary) !important; }
+.border-emerald-500 { border-color: var(--primary) !important; }
+.bg-emerald-500\/10 { background-color: var(--primary-glow) !important; }
+.border-emerald-500\/20 { border-color: var(--primary-glow) !important; }
+.shadow-emerald-500\/20 { box-shadow: 0 10px 15px -3px var(--primary-glow), 0 4px 6px -4px var(--primary-glow) !important; }
+.focus\:ring-emerald-500:focus { --tw-ring-color: var(--primary) !important; }
+.hover\:bg-emerald-400:hover { background-color: var(--primary) !important; filter: brightness(1.1); }
+.hover\:text-emerald-500:hover { color: var(--primary) !important; }
+
+@layer base {
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #09090b;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #27272a;
+    border-radius: 10px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f3f46;
+  }
+}
+
+body {
+  @apply bg-black text-zinc-100 antialiased;
+}
