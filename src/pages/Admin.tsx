@@ -83,17 +83,24 @@ export const Admin: React.FC = () => {
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password === 'HuddyBuddy') {
+    const trimmedPassword = password.trim();
+    
+    if (trimmedPassword === 'HuddyBuddy') {
       try {
         await signInAnonymously();
         setIsAuthorized(true);
         sessionStorage.setItem('admin_authorized', 'true');
         setError('');
-      } catch (err) {
-        setError('Authentication failed. Please try again.');
+      } catch (err: any) {
+        console.error('Firebase Auth Error:', err);
+        if (err.code === 'auth/operation-not-allowed') {
+          setError('Anonymous Auth is not enabled in Firebase Console. Please enable it in Authentication > Sign-in method.');
+        } else {
+          setError(`Authentication failed: ${err.message || 'Unknown error'}`);
+        }
       }
     } else {
-      setError('Incorrect password. Please try again.');
+      setError('Incorrect password. Case sensitive: "HuddyBuddy"');
     }
   };
 
