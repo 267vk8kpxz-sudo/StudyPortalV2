@@ -6,12 +6,14 @@ import {
   AlertTriangle,
   Settings as SettingsIcon,
   Shield,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Lock
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSettings } from '../context/SettingsContext';
 
 export const Settings: React.FC = () => {
+  const navigate = useNavigate();
   const { 
     theme, setTheme, 
     performance, setPerformance, 
@@ -19,6 +21,11 @@ export const Settings: React.FC = () => {
     panicKey, setPanicKey,
     wallpaper, setWallpaper
   } = useSettings();
+
+  const handleLock = () => {
+    localStorage.removeItem('nexus_session_id');
+    window.location.href = '/';
+  };
 
   const wallpapers = [
     { name: 'Abstract Blue', url: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop' },
@@ -133,7 +140,7 @@ export const Settings: React.FC = () => {
             <Ghost className="w-5 h-5 text-emerald-500" />
             <h2 className="font-bold">Stealth Mode</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="space-y-4">
               <button
                 onClick={() => setStealthMode(!isStealthMode)}
@@ -143,17 +150,17 @@ export const Settings: React.FC = () => {
                     : 'bg-black/40 border-zinc-800 text-zinc-400 hover:border-zinc-700'
                 }`}
               >
-                <span className="text-sm font-medium">Mask Tab & Title</span>
+                <span className="text-sm font-medium">Mask Tab</span>
                 <div className={`w-10 h-5 rounded-full relative transition-colors ${isStealthMode ? 'bg-emerald-500' : 'bg-zinc-700'}`}>
                   <div className={`absolute top-1 w-3 h-3 rounded-full bg-white transition-all ${isStealthMode ? 'left-6' : 'left-1'}`} />
                 </div>
               </button>
-              <p className="text-xs text-zinc-500">Changes the page title and icon to "Google Classroom" to blend in.</p>
+              <p className="text-[10px] text-zinc-500">Changes the page title and icon to "Google Classroom".</p>
             </div>
-            
+
             <div className="space-y-4">
               <div className="space-y-2">
-                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Panic Key (Kill Button)</label>
+                <label className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Panic Key</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
@@ -164,11 +171,21 @@ export const Settings: React.FC = () => {
                   />
                   <div className="flex-1 flex items-center gap-2 px-3 py-1.5 bg-rose-500/10 border border-rose-500/20 rounded-lg text-rose-500 text-[10px] font-bold">
                     <AlertTriangle className="w-3 h-3" />
-                    REDIRECTS TO GOOGLE CLASSROOM
+                    REDIRECTS
                   </div>
                 </div>
               </div>
-              <p className="text-xs text-zinc-500">Pressing this key instantly leaves the site.</p>
+            </div>
+            
+            <div className="space-y-4">
+              <button
+                onClick={handleLock}
+                className="w-full h-[46px] flex items-center justify-between px-4 rounded-xl border border-zinc-800 bg-black/40 text-zinc-400 hover:border-rose-500/50 hover:text-rose-500 transition-all group mt-6"
+              >
+                <span className="text-sm font-medium">Lock Portal</span>
+                <Lock className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              </button>
+              <p className="text-[10px] text-zinc-500">Instantly hides the game portal.</p>
             </div>
           </div>
         </div>
