@@ -14,6 +14,16 @@ function AppContent() {
   const [isUnlocked, setIsUnlocked] = useState(() => {
     return localStorage.getItem('nexus_session_id') === 'active_portal';
   });
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    // Check for unlock status on mount
+    const status = localStorage.getItem('nexus_session_id');
+    if (status === 'active_portal') {
+      setIsUnlocked(true);
+    }
+    setIsReady(true);
+  }, []);
 
   const handleUnlock = () => {
     setIsUnlocked(true);
@@ -21,6 +31,8 @@ function AppContent() {
   };
 
   const isDesktop = location.pathname === '/';
+
+  if (!isReady) return null;
 
   // If not unlocked and on root, show StudyHome
   if (!isUnlocked && isDesktop) {
