@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Gamepad2, ShieldCheck, Search } from 'lucide-react';
+import { Gamepad2, ShieldCheck, Search, LifeBuoy } from 'lucide-react';
 
 export const Navbar: React.FC = () => {
   return (
@@ -17,6 +17,10 @@ export const Navbar: React.FC = () => {
 
             <Link to="/games" className="text-zinc-400 hover:text-white text-sm font-bold uppercase tracking-widest hidden sm:block">
               Games
+            </Link>
+            
+            <Link to="/support" className="text-zinc-400 hover:text-white text-sm font-bold uppercase tracking-widest hidden sm:block">
+              Support
             </Link>
           </div>
 

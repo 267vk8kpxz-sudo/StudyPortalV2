@@ -8,6 +8,7 @@ import { PlayGame } from './pages/PlayGame';
 import { Admin } from './pages/Admin';
 import { Settings } from './pages/Settings';
 import { StudyHome } from './pages/StudyHome';
+import Support from './pages/Support';
 
 function AppContent() {
   const location = useLocation();
@@ -31,8 +32,14 @@ function AppContent() {
   };
 
   const isDesktop = location.pathname === '/';
+  const isSupport = location.pathname === '/support';
 
   if (!isReady) return null;
+
+  // If on support page, always show it
+  if (isSupport) {
+    return <Support />;
+  }
 
   // If not unlocked and on root, show StudyHome
   if (!isUnlocked && isDesktop) {

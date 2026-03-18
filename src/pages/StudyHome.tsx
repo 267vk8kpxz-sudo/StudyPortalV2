@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useNavigate } from 'react-router-dom';
 import { 
   BookOpen, 
   GraduationCap, 
@@ -18,14 +19,14 @@ import {
   Save,
   BrainCircuit,
   Mail,
-  Phone,
   Globe,
   FileText,
   ShieldCheck,
   Cookie,
   ArrowLeft,
   Trophy,
-  HelpCircle
+  HelpCircle,
+  LifeBuoy
 } from 'lucide-react';
 import { COURSES_DATA, Course, Trivia, Question as TriviaQuestion } from '../data/courses';
 
@@ -41,6 +42,7 @@ interface Question {
 }
 
 export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [clickCount, setClickCount] = useState(0);
   const [activeTab, setActiveTab] = useState<'home' | 'trivia' | 'courses' | 'legal'>('home');
@@ -268,7 +270,13 @@ export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
                     <input type="checkbox" className="rounded border-zinc-300 text-blue-600 focus:ring-blue-500" />
                     Remember me
                   </label>
-                  <button type="button" className="text-blue-600 font-semibold hover:underline">Forgot password?</button>
+                  <button 
+                    type="button" 
+                    onClick={() => navigate('/support')}
+                    className="text-blue-600 font-semibold hover:underline"
+                  >
+                    Forgot password?
+                  </button>
                 </div>
                 <button 
                   type="submit"
@@ -279,7 +287,7 @@ export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
               </form>
 
               <p className="text-center text-zinc-500 text-sm mt-8">
-                Don't have an account? <button className="text-blue-600 font-semibold hover:underline">Contact Admissions</button>
+                Don't have an account? <button onClick={() => navigate('/support')} className="text-blue-600 font-semibold hover:underline">Contact Admissions</button>
               </p>
             </motion.div>
           </div>
@@ -316,6 +324,12 @@ export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
                 className={`text-sm font-medium transition-colors ${activeTab === 'trivia' ? 'text-blue-600' : 'text-zinc-600 hover:text-blue-600'}`}
               >
                 Trivia Maker
+              </button>
+              <button 
+                onClick={() => navigate('/support')}
+                className="text-sm font-medium text-zinc-600 hover:text-blue-600 transition-colors"
+              >
+                Support
               </button>
               
               {isLoggedIn ? (
@@ -377,6 +391,12 @@ export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
                   className="block w-full text-left text-sm font-medium text-zinc-600 hover:text-blue-600"
                 >
                   Trivia Maker
+                </button>
+                <button 
+                  onClick={() => { navigate('/support'); setIsMenuOpen(false); }}
+                  className="block w-full text-left text-sm font-medium text-zinc-600 hover:text-blue-600"
+                >
+                  Support
                 </button>
                 
                 {isLoggedIn ? (
@@ -1070,11 +1090,13 @@ export const StudyHome: React.FC<StudyHomeProps> = ({ onUnlock }) => {
             <div>
               <h4 className="font-bold mb-6">Support</h4>
               <ul className="space-y-4 text-zinc-400">
-                <li className="flex items-center gap-2">
-                  <Mail className="w-4 h-4" /> nexusacademics2@gmail.com
+                <li>
+                  <button onClick={() => navigate('/support')} className="hover:text-white transition-colors flex items-center gap-2">
+                    <LifeBuoy className="w-4 h-4" /> Support Center
+                  </button>
                 </li>
                 <li className="flex items-center gap-2">
-                  <Phone className="w-4 h-4" /> 1-800-NEXUS-EDU
+                  <Mail className="w-4 h-4" /> nexusacademics2@gmail.com
                 </li>
               </ul>
             </div>
